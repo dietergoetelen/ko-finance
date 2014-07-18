@@ -1,7 +1,6 @@
 ﻿/// <reference path="../models/sharedPayment.js" />
 var mongoose = require('mongoose'),
     Uid = require('../models/uid'),
-    Payment = require('../models/payment'),
     _ = require('lodash');
 
 module.exports = UidController;
