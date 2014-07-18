@@ -1,0 +1,224 @@
+﻿.top10 {
+    margin-top: 10px;
+}
+
+.top20 {
+    margin-top: 20px;
+}
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+.sidebar {
+  display: none;
+}
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+  }
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+
+/*
+ * Main content
+ */
+
+.main {
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  .main {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+.main .page-header {
+  margin-top: 0;
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+
+.placeholders {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.placeholders h4 {
+  margin-bottom: 0;
+}
+.placeholder {
+  margin-bottom: 20px;
+}
+.placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+}
+
+/* Shared payments */
+#shared-payment {
+    overflow-x: hidden;
+}
+
+.payment-container {
+    position: absolute;
+    height: 100%;
+}
+
+.payment-container > div {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.payment-bg {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 100%;
+    width: 100%;
+}
+
+.lighten {
+    opacity: .1;
+}
+
+.inner-shared-payment {
+    padding: 20px;
+    position: absolute;
+    background-color: #fff;
+    overflow-y: auto;
+    z-index: 9999;
+    height: 100%;
+    width: 100%;
+    -webkit-animation-name: slide-in;
+    -moz-animation-name: slide-in;
+    -ms-animation-name: slide-in;
+    -o-animation-name: slide-in;
+    animation-name: slide-in;
+    -webkit-animation-iteration-count: once;
+    -moz-animation-iteration-count: once;
+    -ms-animation-iteration-count: once;
+    -o-animation-iteration-count: once;
+    animation-iteration-count: once;
+    -webkit-animation-timing-function: ease-in;
+    -moz-animation-timing-function: ease-in;
+    -ms-animation-timing-function: ease-in;
+    -o-animation-timing-function: ease-in;
+    animation-timing-function: ease-in;
+    -webkit-animation-duration: .1s;
+    -moz-animation-duration: .1s;
+    -ms-animation-duration: .1s;
+    -o-animation-duration: .1s;
+    animation-duration: .1s;
+}
+
+@keyframes slide-in {
+    0% {
+        left: 999px;
+    }
+    100% {
+        left: 0px;
+    } 
+}
+
+@-webkit-keyframes slide-in {
+   0% {
+        left: 999px;
+    }
+    100% {
+        left: 0px;
+    } 
+}
+
+@-moz-keyframes slide-in {
+  0% {
+        left: 999px;
+    }
+    100% {
+        left: 0px;
+    } 
+}
+
+.initFade {
+    opacity: 0;
+}
+
+.fadein {
+    -webkit-animation-name: fade-in;
+    -moz-animation-name: fade-in;
+    -ms-animation-name: fade-in;
+    -o-animation-name: fade-in;
+    animation-name: fade-in;
+    -webkit-animation-iteration-count: once;
+    -moz-animation-iteration-count: once;
+    -ms-animation-iteration-count: once;
+    -o-animation-iteration-count: once;
+    animation-iteration-count: once;
+    -webkit-animation-timing-function: ease-in;
+    -moz-animation-timing-function: ease-in;
+    -ms-animation-timing-function: ease-in;
+    -o-animation-timing-function: ease-in;
+    animation-timing-function: ease-in;
+    -webkit-animation-duration: .2s;
+    -moz-animation-duration: .2s;
+    -ms-animation-duration: .2s;
+    -o-animation-duration: .2s;
+    animation-duration: .2s;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    } 
+}
+
+@-webkit-keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    } 
+}
+
+@-moz-keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    } 
+}

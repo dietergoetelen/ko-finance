@@ -1,0 +1,372 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Payment manager</title>
+
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid">
+
+        <div id="shared-payment-ko">
+
+            <!-- ko if: showSharedPayments -->
+            <div id="shared-payment">
+                <div class="row">
+                    <div class="payment-bg"></div>
+                    <div class="col-md-7 col-md-push-5 payment-container">
+                        <div>
+                            <div class="inner-shared-payment">
+
+                                <div class="alert alert-info">
+                                    <strong>Calculated amount:</strong> &euro; <span data-bind="text: totalCalculatedAmount"></span>
+                                </div>
+
+                                <!-- ko foreach: groupedPayments -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <button class="btn btn-default pull-right btn-sm" data-bind="click: $parent.swapNewMode">New</button>
+                                        <h4 class="panel-title" data-bind="text: category"></h4>
+                                    </div>
+
+                                    <!-- ko if: newMode() === false && payments().length > 0 -->
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th class="col-md-1"></th>
+                                            <th class="col-md-5">Description</th>
+                                            <th class="col-md-3">Issued by</th>
+                                            <th class="col-md-3">Amount</th>
+                                        </tr>
+
+                                        <!-- ko foreach: payments -->
+                                        <tr>
+                                            <td>
+                                                
+                                                <a href="#" data-bind="click: $root.swapEditMode">
+                                                    <!-- ko if:editMode() === true -->
+                                                    Save
+                                                    <!-- /ko -->
+                                                    <!-- ko if:editMode() === false -->
+                                                    Edit
+                                                    <!-- /ko -->
+                                                </a>
+
+                                            </td>
+                                            <td>
+                                                <!-- ko if:editMode() === false -->
+                                                <span data-bind="text: description"></span>
+                                                <!-- /ko -->
+
+                                                <!-- ko if:editMode() === true -->
+                                                <input class="form-control" type="text" data-bind="value: description"/>
+                                                <!-- /ko -->
+                                            </td>
+                                            <td>
+                                                <!-- ko if:editMode() === false -->
+                                                <span data-bind="text: issuedBy"></span>
+                                                <!-- /ko -->
+                                                
+                                                 <!-- ko if:editMode() === true -->
+                                                <input class="form-control" type="text" data-bind="value: issuedBy"/>
+                                                <!-- /ko -->
+                                            </td>
+                                            <td>
+                                                <!-- ko if:editMode() === false -->
+                                                <span data-bind="text: amount"></span>
+                                                <!-- /ko -->
+                                                
+                                                 <!-- ko if:editMode() === true -->
+                                                <input class="form-control" type="number" data-bind="value: amount"/>
+                                                <!-- /ko -->
+                                            </td>
+                                        </tr>
+                                        <!-- /ko -->
+
+                                    </table>
+                                    <!-- /ko -->
+
+                                    <div class="panel-body">
+                                        <!-- ko if: newMode() -->
+                                        <div class="form-group">
+                                            <label>Amount</label>
+                                            <input type="number" class="form-control" data-bind="value: $root.newPayment.amount" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Description</label>
+                                            <input type="text" class="form-control" data-bind="value: $root.newPayment.description" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Issued By</label>
+                                            <input type="text" class="form-control" data-bind="value: $root.newPayment.issuedBy" />
+                                        </div>
+
+                                        <button class="btn btn-success" data-bind="click: $root.addNewPayment">Add</button>
+                                        <button class="btn btn-warning" data-bind="click: $root.swapNewMode">Cancel</button>
+
+                                        <!-- /ko -->
+                                    </div>
+                                </div>
+                                <!-- /ko -->
+
+                                <button class="btn-warning btn" data-bind="click: hidePanel">Back</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+
+
+        <div class="row">
+            <div id="sidebar" class="col-sm-3 col-md-2 sidebar" data-bind="css: {lighten: sharedPaymentsVisible}">
+
+                <ul class="nav nav-sidebar" data-bind="foreach: orderedUids">
+                    <li>
+                        <a href="#" data-bind="click: $parent.navigateUid, text: name"></a>
+                    </li>
+                </ul>
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">New Group</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-bind="value: newUid" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" data-bind="click: addNewUid">Add</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main initFade fadein" data-bind="css: {lighten: sharedPaymentsVisible, hidden:false, initFade: dataLoading() === true, fadein: dataLoading() === false}">
+
+                <div class="row top20" data-bind="if: uid">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h2>
+                                    <span data-bind="text: uid"></span>
+                                    <button class="btn btn-success btn-sm" data-bind="click: newPayment">New</button>
+                                </h2>
+                            </div>
+                            <div class="col-md-3 col-md-push-1">
+                                <div class="panel-default panel">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><span class="badge alert-success">€ <span data-bind="text: valuePreviousMonth"></span></span> Previous month </li>
+                                        <li class="list-group-item"><span class="badge alert-success"><span data-bind="text: totalPaymentsByType('all')"></span></span>Current </li>
+                                        <li class="list-group-item"><span class="badge alert-success">€ <span data-bind="text: newBalance"></span></span> New balance </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ko if: payments().length > 0 && !addingPayment() -->
+                        <div class="panel panel-default">
+
+                            <!-- ko if: paymentsByType('credit')().length > 0 -->
+                            <div class="panel-body">
+                                <h3>Fixed income</h3>
+                            </div>
+
+                            <div data-bind="template: {name: 'payment-template', data: {payments: paymentsByType('credit'), total: totalPaymentsByType('credit')} }"></div>
+                            <!-- /ko -->
+
+                            <!-- ko if: paymentsByType('shared')().length > 0 -->
+                            <div class="panel-body">
+                                <h3>Shared spendings</h3>
+                            </div>
+
+                            <div data-bind="template: {name: 'payment-template', data: {payments: paymentsByType('shared'), total: totalPaymentsByType('shared')} }"></div>
+                            <!-- /ko -->
+
+                            <!-- ko if: paymentsByType('debet')().length > 0 -->
+                            <div class="panel-body">
+                                <h3>Fixed spendings</h3>
+                            </div>
+
+                            <div data-bind="template: {name: 'payment-template', data: {payments: paymentsByType('debet'), total: totalPaymentsByType('debet')} }"></div>
+                            <!-- /ko -->
+
+                            <!-- ko if: paymentsByType('casual')().length > 0 -->
+                            <div class="panel-body">
+                                <h3>Casual spendings</h3>
+                            </div>
+
+                            <div data-bind="template: {name: 'payment-template', data: {payments: paymentsByType('casual'), total: totalPaymentsByType('casual')} }"></div>
+                            <!-- /ko -->
+                        </div>
+                        <!-- /ko -->
+                        
+                        <!-- ko if: addingPayment() || payments().length == 0 -->
+                        <div class="panel panel-default hidden" data-bind="css: { hidden: false }">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="amount">Amount</label>
+                                    <input id="amount" class="form-control" type="number" data-bind="value: paymentModel.amount, valueUpdate:'afterkeydown'" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="amount">Description</label>
+                                    <input class="form-control" type="text" data-bind="value: paymentModel.description, valueUpdate:'afterkeydown'" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="amount">Place</label>
+                                    <input class="form-control" type="text" data-bind="value: paymentModel.place, valueUpdate:'afterkeydown'" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="amount">Issued by</label>
+                                    <input class="form-control" type="text" data-bind="value: paymentModel.issuedBy, valueUpdate:'afterkeydown'" />
+                                </div>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="credit" checked data-bind="checked: paymentModel.paymentType">
+                                        Income
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="debet" data-bind="checked: paymentModel.paymentType">
+                                        Outgoing
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="Radio1" value="casual" data-bind="checked: paymentModel.paymentType">
+                                        Casual
+                                    </label>
+                                </div>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="Radio2" value="shared" data-bind="checked: paymentModel.paymentType">
+                                        Shared
+                                    </label>
+                                </div>
+
+                                <button class="btn btn-success" data-bind="click: addPayment.bind($data, paymentModel), enable: newPaymentValid">Add</button>
+                                <button class="btn btn-warning" data-bind="click: cancelPayment">Cancel</button>
+                            </div>
+                        </div>
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- templates -->
+    <script type="text/html" id="payment-template">
+        <table class="table table-hover">
+            <tr>
+                <th class="col-md-1">#</th>
+                <th class="col-md-3">Place</th>
+                <th class="col-md-5">Description</th>
+                <th class="col-md-2">Issued by</th>
+                <th class="col-md-1">Amount</th>
+            </tr>
+
+            <!-- ko foreach: payments -->
+            <tr>
+                <!--<td>
+                                    <a href="#" data-bind="click: $parent.removePayment">Remove</a>
+                                </td>-->
+                <td>
+                    <a href="#" data-bind="click: $root.swapEditMode">
+                        <!-- ko if:editMode() === true -->
+                        Save
+                                    <!-- /ko -->
+                        <!-- ko if:editMode() === false -->
+                        Edit
+                                    <!-- /ko -->
+                    </a>
+
+                    <!-- ko if:editMode() === true -->
+                    <a href="#" data-bind="click: $root.removePayment">Remove</a>
+                    <!-- /ko -->
+
+                </td>
+                <td>
+                    <!-- ko if:editMode() === false -->
+                    <span data-bind="text: place"></span>
+                    <!-- /ko -->
+                    <!-- ko if:editMode() === true -->
+                    <input type="text" data-bind="value: place" class="form-control" />
+                    <!-- /ko -->
+                </td>
+                <td>
+                    <!-- ko if:editMode() === false -->
+                    <span data-bind="text: description"></span>
+                    <!-- /ko -->
+                    <!-- ko if:editMode() === true -->
+                    <input type="text" data-bind="value: description" class="form-control" />
+                    <!-- /ko -->
+                </td>
+                <td>
+                    <!-- ko if:editMode() === false -->
+                    <span data-bind="text: issuedBy"></span>
+                    <!-- /ko -->
+                    <!-- ko if:editMode() === true -->
+                    <input type="text" data-bind="value: issuedBy" class="form-control" />
+                    <!-- /ko -->
+                </td>
+                <td>
+                    <!-- ko if:editMode() === false && paymentType() !== "shared" -->
+                    <span data-bind="text: amount"></span>
+                    <!-- /ko -->
+                    <!-- ko if:editMode() === true && paymentType() !== "shared" -->
+                    <input type="number" data-bind="value: amount, valueUpdate: 'afterkeydown'" class="form-control" />
+                    <!-- /ko -->
+
+                    <!-- ko if:paymentType() === "shared" -->
+                    <a href="#" data-bind="text: $root.calculatedAmount($data), click: $root.triggerSharedCosts"></a>
+                    <!-- /ko -->
+
+                    <!--<input type="number" class="form-control" data-bind="value: amount, valueUpdate:'afterkeydown'"/>-->
+                </td>
+            </tr>
+            <!-- /ko -->
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <div class="pull-right">Total</div>
+                </td>
+                <td data-bind="text: total"></td>
+            </tr>
+        </table>
+    </script>
+
+    <!-- libs -->
+    <script src="lib/knockout.min.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/jquery.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <!-- bootstrapper -->
+    <script src="js/namespace.js"></script>
+
+    <!-- datacontext -->
+    <script src="js/data/datacontext.js"></script>
+
+    <!-- vms -->
+    <script src="js/viewmodels/vmContent.js"></script>
+    <script src="js/viewmodels/vmSidebar.js"></script>
+    <script src="js/viewmodels/vmSharedPayments.js"></script>
+
+    <!-- kickoff app -->
+    <script src="js/bootstrapper.js"></script>
+</body>
+</html>

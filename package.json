@@ -1,0 +1,12 @@
+{
+  "name": "finance-app",
+  "description": "Finance app",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "mongoose": "~3.8.13",
+    "body-parser": "~1.4.3",
+    "lodash": "~2.4.1"
+  }
+}
