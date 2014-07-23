@@ -36,8 +36,9 @@
                                         <tr>
                                             <th class="col-md-1"></th>
                                             <th class="col-md-5">Description</th>
+                                            <th class="col-md-2">Shared cost</th>
                                             <th class="col-md-3">Issued by</th>
-                                            <th class="col-md-3">Amount</th>
+                                            <th class="col-md-1">Amount</th>
                                         </tr>
 
                                         <!-- ko foreach: payments -->
@@ -54,6 +55,7 @@
                                                 </a>
 
                                             </td>
+
                                             <td>
                                                 <!-- ko if:editMode() === false -->
                                                 <span data-bind="text: description"></span>
@@ -63,6 +65,11 @@
                                                 <input class="form-control" type="text" data-bind="value: description"/>
                                                 <!-- /ko -->
                                             </td>
+
+                                            <td>
+                                                <input type="checkbox" data-bind="checked: $root.isShared($data), click: $root.swapSharedCost"/>
+                                            </td>
+
                                             <td>
                                                 <!-- ko if:editMode() === false -->
                                                 <span data-bind="text: issuedBy"></span>

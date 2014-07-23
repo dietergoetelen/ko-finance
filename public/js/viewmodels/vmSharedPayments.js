@@ -46,6 +46,21 @@ app.vmSharedPayments = (function () {
             }
         ]),
 
+        swapSharedCost = function() {
+            var amountShared = this.amountSharedWith();
+            
+            if (amountShared > 1) {
+                this.amountSharedWith(1);
+            } else {
+                this.amountSharedWith(2);
+            }
+
+            // Update shared payment
+            app.dataContext.updateSharedPayment(payment().uid, payment()._id, this);
+
+            return true;
+        },
+
         payment = ko.observable(),
 
         totalCalculatedAmount = ko.computed(function () {
@@ -82,12 +97,16 @@ app.vmSharedPayments = (function () {
 
             payment().sharedPayments.push(sharedPayment);
 
-            //app.pubSub.notifySubscribers(null, app.utils.subscriberType.saveToDb);
-            //app.dataContext.updatePayment(payment());
             app.dataContext.addSharedPayment(payment().uid, payment()._id, sharedPayment);
 
             this.newMode(false);
             _resetNewPayment();
+        },
+
+        isShared = function (item) {
+            return ko.dependentObservable(function () {
+                return item.amountSharedWith() > 1;
+            });
         },
 
         groupedPayments = ko.computed(function() {
@@ -137,7 +156,9 @@ app.vmSharedPayments = (function () {
         newPayment: newPayment,
         addNewPayment: addNewPayment,
         totalCalculatedAmount: totalCalculatedAmount,
-        swapEditMode: swapEditMode
+        swapEditMode: swapEditMode,
+        swapSharedCost: swapSharedCost,
+        isShared : isShared
     };
 
 })();

@@ -235,7 +235,6 @@ UidController.prototype.updateSharedPayment = function(req, res) {
         var payment = uid.payments.id(paymentId);
 
         var sharedPayment = _.find(payment.sharedPayments, function (sp) {
-            console.log(sp._id, sharedPaymentId);
             return sp._id == sharedPaymentId;
         });
 
@@ -243,6 +242,7 @@ UidController.prototype.updateSharedPayment = function(req, res) {
             sharedPayment.description = req.body.description;
             sharedPayment.amount = req.body.amount;
             sharedPayment.issuedBy = req.body.issuedBy;
+            sharedPayment.amountSharedWith = req.body.amountSharedWith;
 
             uid.save(function(err, item) {
                 if (err) {
