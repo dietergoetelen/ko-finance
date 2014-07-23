@@ -1,8 +1,6 @@
 ﻿var mongoose = require('mongoose'),
-    PaymentController = require('./controllers/paymentController'),
     UidController = require('./controllers/uidController'),
     db = require('../config/database'),
-    paymentController = new PaymentController(db.url),
     uidController = new UidController(db.url);
 
 mongoose.connect(db.url);
