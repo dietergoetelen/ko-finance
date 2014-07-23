@@ -102,10 +102,11 @@
 }
 
 .payment-bg {
-    position: absolute;
+    position: fixed;
     background-color: rgba(0, 0, 0, 0.1);
     height: 100%;
     width: 100%;
+    background-repeat: repeat;
 }
 
 .lighten {

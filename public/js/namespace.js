@@ -24,7 +24,8 @@ app.utils.subscriberType = {
     showSharedPayments: "show.sharedPayments",
     loading: "data.loading",
     calculatePrevious: "data.calculatePrevious",
-    updateMonthSalary: "data.updateMonthSalary"
+    updateMonthSalary: "data.updateMonthSalary",
+    showLogin: "showLogin"
 };
 
 app.utils.calculateShared = function(sharedPayments) {

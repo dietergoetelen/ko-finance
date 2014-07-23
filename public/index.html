@@ -10,8 +10,27 @@
 <body>
     <div class="container-fluid">
 
-        <div id="shared-payment-ko">
+        <div id="login-ko">
+            <!-- ko if: showLogin -->
+            <div class="row">
+                <div class="col-md-3 col-md-push-2">
+                    <h2>Please sign in</h2>
+                    <div class="form-group">
+                        <input type="text" data-bind="value: username" class="form-control" placeholder="Username" required autofocus/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" data-bind="value: password" class="form-control" placeholder="Password" required/>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-lg btn-primary btn-sm" data-bind="click: login">Sign in</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
 
+        <div id="shared-payment-ko">
+            
             <!-- ko if: showSharedPayments -->
             <div id="shared-payment">
                 <div class="row">
@@ -44,7 +63,7 @@
                                         <!-- ko foreach: payments -->
                                         <tr>
                                             <td>
-                                                
+
                                                 <a href="#" data-bind="click: $root.swapEditMode">
                                                     <!-- ko if:editMode() === true -->
                                                     Save
@@ -62,30 +81,30 @@
                                                 <!-- /ko -->
 
                                                 <!-- ko if:editMode() === true -->
-                                                <input class="form-control" type="text" data-bind="value: description"/>
+                                                <input class="form-control" type="text" data-bind="value: description" />
                                                 <!-- /ko -->
                                             </td>
 
                                             <td>
-                                                <input type="checkbox" data-bind="checked: $root.isShared($data), click: $root.swapSharedCost"/>
+                                                <input type="checkbox" data-bind="checked: $root.isShared($data), click: $root.swapSharedCost" />
                                             </td>
 
                                             <td>
                                                 <!-- ko if:editMode() === false -->
                                                 <span data-bind="text: issuedBy"></span>
                                                 <!-- /ko -->
-                                                
-                                                 <!-- ko if:editMode() === true -->
-                                                <input class="form-control" type="text" data-bind="value: issuedBy"/>
+
+                                                <!-- ko if:editMode() === true -->
+                                                <input class="form-control" type="text" data-bind="value: issuedBy" />
                                                 <!-- /ko -->
                                             </td>
                                             <td>
                                                 <!-- ko if:editMode() === false -->
                                                 <span data-bind="text: amount"></span>
                                                 <!-- /ko -->
-                                                
-                                                 <!-- ko if:editMode() === true -->
-                                                <input class="form-control" type="number" data-bind="value: amount"/>
+
+                                                <!-- ko if:editMode() === true -->
+                                                <input class="form-control" type="number" data-bind="value: amount" />
                                                 <!-- /ko -->
                                             </td>
                                         </tr>
@@ -131,7 +150,7 @@
 
         <div class="row">
             <div id="sidebar" class="col-sm-3 col-md-2 sidebar" data-bind="css: {lighten: sharedPaymentsVisible}">
-
+                <!-- ko if: showLogin() == false -->
                 <ul class="nav nav-sidebar" data-bind="foreach: orderedUids">
                     <li>
                         <a href="#" data-bind="click: $parent.navigateUid, text: name"></a>
@@ -151,10 +170,11 @@
                         </div>
                     </div>
                 </div>
+                <!-- /ko -->
             </div>
 
             <div id="content" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main initFade fadein" data-bind="css: {lighten: sharedPaymentsVisible, hidden:false, initFade: dataLoading() === true, fadein: dataLoading() === false}">
-
+                <!-- ko if: showLogin() == false -->
                 <div class="row top20" data-bind="if: uid">
                     <div class="col-md-12">
                         <div class="row">
@@ -167,9 +187,9 @@
                             <div class="col-md-3 col-md-push-1">
                                 <div class="panel-default panel">
                                     <ul class="list-group">
-                                        <li class="list-group-item"><span class="badge alert-success">€ <span data-bind="text: valuePreviousMonth"></span></span> Previous month </li>
+                                        <li class="list-group-item"><span class="badge alert-success">€ <span data-bind="text: valuePreviousMonth"></span></span>Previous month </li>
                                         <li class="list-group-item"><span class="badge alert-success"><span data-bind="text: totalPaymentsByType('all')"></span></span>Current </li>
-                                        <li class="list-group-item"><span class="badge alert-success">€ <span data-bind="text: newBalance"></span></span> New balance </li>
+                                        <li class="list-group-item"><span class="badge alert-success">€ <span data-bind="text: newBalance"></span></span>New balance </li>
                                     </ul>
                                 </div>
                             </div>
@@ -211,7 +231,7 @@
                             <!-- /ko -->
                         </div>
                         <!-- /ko -->
-                        
+
                         <!-- ko if: addingPayment() || payments().length == 0 -->
                         <div class="panel panel-default hidden" data-bind="css: { hidden: false }">
                             <div class="panel-body">
@@ -268,6 +288,7 @@
                         <!-- /ko -->
                     </div>
                 </div>
+                <!-- /ko -->
             </div>
         </div>
     </div>
@@ -370,6 +391,7 @@
 
     <!-- vms -->
     <script src="js/viewmodels/vmContent.js"></script>
+    <script src="js/viewmodels/vmLogin.js"></script>
     <script src="js/viewmodels/vmSidebar.js"></script>
     <script src="js/viewmodels/vmSharedPayments.js"></script>
 

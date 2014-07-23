@@ -13,6 +13,7 @@ app.vmSharedPayments = (function () {
 
     var
         showSharedPayments = ko.observable(false),
+        showLogin = ko.observable(false),
 
         newPayment = {
             description: ko.observable(),
@@ -142,11 +143,21 @@ app.vmSharedPayments = (function () {
         };
 
     app.pubSub.subscribe(function (value) {
+        if (value[0] === true) {
+            $('body').css('overflow', 'hidden');
+            $('html, body').animate({ scrollTop: 0 }, 0);
+        } else {
+            $('body').css('overflow', 'visible');
+        }
 
         showSharedPayments(value[0]);
         payment(value[1]);
 
     }, null, app.utils.subscriberType.showSharedPayments);
+
+    app.pubSub.subscribe(function (value) {
+        showLogin(value);
+    }, null, app.utils.subscriberType.showLogin);
 
     return {
         showSharedPayments: showSharedPayments,
@@ -158,7 +169,8 @@ app.vmSharedPayments = (function () {
         totalCalculatedAmount: totalCalculatedAmount,
         swapEditMode: swapEditMode,
         swapSharedCost: swapSharedCost,
-        isShared : isShared
+        isShared: isShared,
+        showLogin: showLogin
     };
 
 })();

@@ -11,6 +11,7 @@ app.vmSidebar = (function () {
         uids = ko.observableArray(),
         sharedPaymentsVisible = ko.observable(false),
         selectedUid,
+        showLogin = ko.observable(false),
 
         navigateUid = function () {
             app.pubSub.notifySubscribers(this.name(), app.utils.subscriberType.uid);
@@ -69,13 +70,18 @@ app.vmSidebar = (function () {
 
     }, null, app.utils.subscriberType.showSharedPayments);
 
+    app.pubSub.subscribe(function (value) {
+        showLogin(value);
+    }, null, app.utils.subscriberType.showLogin);
+
     return {
         newUid: newUid,
         uids: uids,
         navigateUid: navigateUid,
         sharedPaymentsVisible: sharedPaymentsVisible,
         addNewUid: addNewUid,
-        orderedUids: orderedUids
+        orderedUids: orderedUids,
+        showLogin: showLogin
     };
 
 })();

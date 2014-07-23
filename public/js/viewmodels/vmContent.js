@@ -17,6 +17,7 @@ app.vmContent = (function () {
         selectedUid = ko.observable(),
         uids = ko.observableArray(),
         payments = ko.observableArray(),
+        showLogin = ko.observable(false),
         dataLoading = ko.observable(true),
         sharedPaymentsVisible = ko.observable(false),
         valuePreviousMonth = ko.observable(0),
@@ -240,6 +241,11 @@ app.vmContent = (function () {
         sharedPaymentsVisible(data[0]);
     }, null, app.utils.subscriberType.showSharedPayments);
 
+    app.pubSub.subscribe(function (value) {
+        console.log(value);
+        showLogin(value);
+    }, null, app.utils.subscriberType.showLogin);
+
     return {
         uids: uids,
         uid: selectedUid,
@@ -259,7 +265,8 @@ app.vmContent = (function () {
         swapEditMode: swapEditMode,
         dataLoading: dataLoading,
         valuePreviousMonth: valuePreviousMonth,
-        newBalance: newBalance
+        newBalance: newBalance,
+        showLogin:showLogin
     };
 })();
 

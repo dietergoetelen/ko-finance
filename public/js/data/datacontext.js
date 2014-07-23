@@ -1,13 +1,46 @@
 ﻿app.dataContext = (function (dataContext) {
     var DEFAULTS_UID_NAME = "Defaults",
-        uids = [];
+        uids = [],
+        token = "azer";
+
+    // Ajax setup =====================================================================================
+    $.ajaxSetup({
+        contentType: 'application/json',
+        beforeSend: function(request) {
+            request.setRequestHeader("accesstoken", token);
+        }
+    });
+
+    $(document).ajaxError(function (event, request, settings) {
+        if (request.statusText === "Unauthorized") {
+            app.pubSub.notifySubscribers(true, app.utils.subscriberType.showLogin);
+        }
+    });
+
+    // Authentication =================================================================================
+    dataContext.login = function(username, password) {
+        $.ajax({
+            type: 'post',
+            url: '/v1/api/auth',
+            data: ko.toJSON({ username: username, password: password }),
+            success: function(result) {
+                if (result.success) {
+                    token = result.token;
+
+                    app.pubSub.notifySubscribers(false, app.utils.subscriberType.showLogin);
+
+                    app.dataContext.getUids();
+                }
+            }
+        });
+
+    };
 
     // Calculation ====================================================================================
     dataContext.calculatePrevious = function (qualifier) {
         $.ajax({
             type: 'get',
             url: '/v1/api/calculate?qualifier=' + qualifier,
-            contentType: 'application/json',
             success: function (result) {
                 app.pubSub.notifySubscribers(result.amount, app.utils.subscriberType.calculatePrevious);
             }
